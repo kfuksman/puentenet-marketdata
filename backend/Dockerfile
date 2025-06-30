@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y maven
 RUN mvn clean package -DskipTests
 
 # Copy the built JAR file (the JAR name should match the artifactId and version)
-COPY target/market-monitor-backend-1.0.0.jar app.jar
+RUN cp target/market-monitor-backend-1.0.0.jar app.jar
 
 # Expose port
 EXPOSE 8092
