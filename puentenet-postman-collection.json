@@ -1,0 +1,282 @@
+{
+	"info": {
+		"_postman_id": "puentenet-api-collection",
+		"name": "Puentenet API",
+		"description": "API collection for Puentenet Market Monitor Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Instruments",
+			"item": [
+				{
+					"name": "Get All Instruments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/instruments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instruments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Instruments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/instruments/search?q=AAPL",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instruments",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "AAPL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Instrument by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/instruments/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instruments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Favorites",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/instruments/favorites",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instruments",
+								"favorites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Favorites",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/instruments/1/favorite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instruments",
+								"1",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove from Favorites",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/instruments/1/favorite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instruments",
+								"1",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Update Market Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/update-market-data",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"update-market-data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Initialize Instruments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/initialize-instruments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"initialize-instruments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8092/api",
+			"type": "string"
+		},
+		{
+			"key": "jwtToken",
+			"value": "your-jwt-token-here",
+			"type": "string"
+		}
+	]
+} 

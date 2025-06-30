@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: puentenet_db
+    environment:
+      POSTGRES_DB: market_monitor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-users.sql:/docker-entrypoint-initdb.d/01-init-users.sql
+      - ./init-indexes.sql:/docker-entrypoint-initdb.d/02-init-indexes.sql
+      - ./init-default-instruments.sql:/docker-entrypoint-initdb.d/03-init-default-instruments.sql
+    networks:
+      - puentenet_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: puentenet_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/market_monitor
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      APP_ALPHA_VANTAGE_API_KEY: ${ALPHA_VANTAGE_API_KEY:-IU9W74WEF0DEWLCF}
+    ports:
+      - "8092:8092"
+    networks:
+      - puentenet_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8092/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend React App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: puentenet_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:8092/api
+    depends_on:
+      - backend
+    networks:
+      - puentenet_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  puentenet_network:
+    driver: bridge 

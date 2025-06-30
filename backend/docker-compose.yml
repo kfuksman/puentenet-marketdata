@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: market_monitor_db
+    environment:
+      POSTGRES_DB: market_monitor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../init-users.sql:/docker-entrypoint-initdb.d/01-init-users.sql
+      - ../init-indexes.sql:/docker-entrypoint-initdb.d/02-init-indexes.sql
+      - ../init-default-instruments.sql:/docker-entrypoint-initdb.d/03-init-default-instruments.sql
+    networks:
+      - market_monitor_network
+
+  backend:
+    build: .
+    container_name: market_monitor_backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/market_monitor
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      ALPHA_VANTAGE_API_KEY: IU9W74WEF0DEWLCF
+      JWT_SECRET: your-secret-key-here-make-it-long-and-secure-in-production
+    ports:
+      - "8092:8092"
+    networks:
+      - market_monitor_network
+
+volumes:
+  postgres_data:
+
+networks:
+  market_monitor_network:
+    driver: bridge 
