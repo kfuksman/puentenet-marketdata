@@ -20,9 +20,12 @@ CREATE TABLE IF NOT EXISTS instruments (
     current_price DECIMAL(19,4),
     daily_change DECIMAL(19,4),
     daily_change_percent DECIMAL(19,4),
+    weekly_change DECIMAL(19,4),
+    weekly_change_percent DECIMAL(19,4),
     day_high DECIMAL(19,4),
     day_low DECIMAL(19,4),
     volume BIGINT,
+    market_cap DECIMAL(19,4),
     last_updated TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE
 );
